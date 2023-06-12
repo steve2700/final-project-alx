@@ -12,6 +12,7 @@
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
     "vue-router": "^4.2.2",
+    "vue-spinner": "^1.0.4",
     "vuetify": "^3.3.3"
   },
   "devDependencies": {

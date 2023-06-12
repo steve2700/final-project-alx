@@ -1,20 +1,20 @@
 <template>
-  <div class="app">
-    <div class="word-recommendation">
-      <h1 class="title">Word Recommendation</h1>
+  <div class="search">
+    <div class="search-container">
+          <h1 class="search-header">Word Recommendation</h1>
+
       <input
-        class="input"
+        class="search-input"
         type="text"
-        placeholder="Enter a word"
+        placeholder="Enter a search query"
         v-model="searchInput"
+        @input="fetchWordRecommendations"
       />
-      <button class="button" @click="search">Search</button>
       <ul class="recommendations" v-if="recommendations.length">
         <li v-for="word in recommendations" :key="word" class="recommendation">
-          {{ word }}
+          <a @click="performSearch(word)">{{ word }}</a>
         </li>
       </ul>
-      <p class="no-results" v-else>No recommendations found.</p>
     </div>
   </div>
 </template>
@@ -30,20 +30,29 @@ export default {
     };
   },
   methods: {
-    search() {
-      axios
-        .get('https://api.datamuse.com/words', {
-          params: {
-            ml: this.searchInput,
-            max: 5,
-          },
-        })
-        .then((response) => {
-          this.recommendations = response.data.map((wordObj) => wordObj.word);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+    fetchWordRecommendations() {
+      if (this.searchInput.length > 0) {
+        axios
+          .get('https://api.datamuse.com/words', {
+            params: {
+              ml: this.searchInput,
+              max: 10,
+            },
+          })
+          .then((response) => {
+            this.recommendations = response.data.map((wordObj) => wordObj.word);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        this.recommendations = [];
+      }
+    },
+    performSearch(query) {
+      // Implement your search functionality here
+      console.log('Performing search for:', query);
+      // Redirect to search results page or fetch search results
     },
   },
 };
@@ -51,64 +60,53 @@ export default {
 
 <style>
 body {
-  background-color: blue;
+  background-color: black;
 }
 
-.app {
+.search {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 }
 
-.word-recommendation {
-  max-width: 400px;
-  padding: 20px;
-  text-align: center;
-  background-color: #f8f8f8;
-  border-radius: 5px;
+.search-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.input {
-  width: 100%;
+.search-input {
+  width: 300px;
   padding: 10px;
-  margin-bottom: 10px;
-  font-size: 16px;
+  font-size: 18px;
+  color: white; /* Set the text color to white */
+  background-color: rgba(255, 255, 255, 0.1); /* Set a semi-transparent background */
   border: 1px solid #ccc;
   border-radius: 5px;
-}
-
-.button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
 .recommendations {
   list-style-type: none;
   padding: 0;
-  margin: 20px 0;
+  margin: 10px 0;
 }
 
 .recommendation {
-  font-size: 18px;
   margin-bottom: 5px;
 }
 
-.no-results {
-  font-style: italic;
-  color: #777;
+.recommendation a {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: none;
 }
+.search-header {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #007bff; /* Change the color to your desired value */
+  }
+
 </style>
 
