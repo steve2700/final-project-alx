@@ -7,7 +7,7 @@
 
 <script>
 import WordRecommendation from '@/views/WordRecommendation.vue';
-import WordDetails from '@/components/WordDetails.vue';
+import WordDetails from '@/views/WordDetails.vue';
 
 export default {
   name: 'App',
